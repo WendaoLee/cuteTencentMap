@@ -1,0 +1,15 @@
+{
+  "name": "cutetencentmap",
+  "version": "0.1.0-dev",
+  "description": "A encapsulation of TencentMap JavascriptAPIv1.0x.It is easy to use with a modern programming style.",
+  "main": "TencentMap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "webgis",
+    "tencentmap"
+  ],
+  "author": "Wendaolee (leewendao@outlook.com)",
+  "license": "Apache-2.0"
+}
