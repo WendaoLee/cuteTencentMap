@@ -20,6 +20,7 @@ export class TencentMap {
     multiPolyLineLayer
     multiPolygonLayer
     multiLabelLayer
+    markerClusterLayer
 
     /**
      * 储存初始化时传入的状态
@@ -648,4 +649,19 @@ export class MultiLabel{
 
         return this
     }
+}
+
+
+export class MarkerCluster{
+    constructor({
+        id=undefined,
+        map=null,
+        enableDefaultStyle=true,
+        minimumClusterSize=2,
+        geometries,
+        zoomOnClick,
+        gridSize,
+        averageCenter,
+        maxZoom
+    }){}
 }
