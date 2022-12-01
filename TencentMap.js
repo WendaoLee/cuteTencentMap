@@ -651,12 +651,6 @@ export class MultiLabel{
         return this
     }
 }
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-
 
 export class MarkerCluster{
     constructor({
@@ -670,9 +664,5 @@ export class MarkerCluster{
         averageCenter,
         maxZoom
     }){}
-<<<<<<< Updated upstream
 }
-=======
 }
->>>>>>> 0c026ffdcf34eae93dc28b24ecb2648198e033f9
->>>>>>> Stashed changes
