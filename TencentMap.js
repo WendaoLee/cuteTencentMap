@@ -38,6 +38,7 @@ export class TencentMap {
      * - rootElemnt 地图挂载的dom元素id。如“mapContainer”
      * - theKey 开发key。
      * - library 附加库。默认加载所有库。它为一个字符串数组，如['visualization', 'tools']
+     * - isInit 是否使用默认地图设置初始化地图。默认情况下不使用默认设置初始化地图。请使用方法BuildMap进行完善设置。  
      * @returns 
      * @class TencentMap
      */
@@ -650,6 +651,11 @@ export class MultiLabel{
         return this
     }
 }
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
 
 
 export class MarkerCluster{
@@ -664,4 +670,9 @@ export class MarkerCluster{
         averageCenter,
         maxZoom
     }){}
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> 0c026ffdcf34eae93dc28b24ecb2648198e033f9
+>>>>>>> Stashed changes
