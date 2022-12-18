@@ -298,13 +298,13 @@ export class TencentMap {
 
     /**
      * 设置地图中心点。
-     * @param {*} centeropts 以对象形式传入经度与纬度、或者传入中心点坐标。请注意，当经纬度与中心点坐标同时传入时，会优先
-     * - lat Number 经度
-     * - lng Number 纬度
-     * - center TMap.LatLng 中心坐标。请使用Literal_TMap_LatLng构建。
+     * @param {Object} centeropts - 以对象形式传入经度与纬度、或者传入中心点坐标。
+     * @param {Number} centeropts.lat - 纬度
+     * @param {Number} centeropts.lng - 经度 
+     * @param {Function} centeropts.center - TMap.LatLng 中心坐标。请使用Literal_TMap_LatLng构建。
      * @returns 
      */
-    setCenter({ lat, lng, center }) {
+    setCenter({lat, lng, center}) {
         if (!this._isMapInit(this.setCenter, { lat, lng, center })) {
             return this
         }
@@ -531,7 +531,6 @@ export class TencentMap {
      */
     util_BindMultiMark(ref) {
         ref = this.MultiMarker
-        ref
         return this
     }
 
@@ -665,4 +664,4 @@ export class MarkerCluster{
         maxZoom
     }){}
 }
-}
+
