@@ -1,8 +1,8 @@
 {
   "name": "cutetencentmap",
-  "version": "0.1.0-dev",
+  "version": "0.2.0-dev",
   "description": "A encapsulation of TencentMap JavascriptAPIv1.0x.It is easy to use with a modern programming style.",
-  "main": "TencentMap.js",
+  "main": "cuteTencentMap.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

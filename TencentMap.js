@@ -414,7 +414,7 @@ export class TencentMap {
         this.instance.setMinZoom(minZoom)
         return this
     }
-
+  
 
     setPitchable(pitchable) {
         if (!this._isMapInit(this.setPitchable, pitchable)) {
