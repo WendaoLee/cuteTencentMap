@@ -1,3 +1,4 @@
+import { LazyPrototype } from "./LazyPrototype"
 
 /**
  * 用于创建经纬度坐标实例。
@@ -17,8 +18,15 @@
  * @method 
  * @returns {Function} 闭包函数。
  */
-export class LatLng{
+export class LatLng extends LazyPrototype{
+
+    /**
+     * 创建经纬度坐标实例。
+     * @param {Number} lat 经度
+     * @param {Number} lng 纬度
+     */
     constructor(lat,lng){
+        super()
         this.instance = function(){
             return new window.TMap.LatLng(lat,lng)
         }
@@ -27,17 +35,19 @@ export class LatLng{
     /**
      * 获取纬度值。
      * 
-     * @summary 此处标识的是
      * @returns {Number}
      */
     getLat(){
-        return ()=>this.instance.apply().getLat()
+        return ()=>typeof this.instance == "function"?this.instance.apply().getLat():this.instance.getLat()
     }
 
+    /**
+     * 获取经度值
+     * 
+     * @returns {Number} 
+     */
     getLng(){
-        return ()=>this.instance.apply().getLng()
+        return ()=>typeof this.instance == "function"?this.instance.apply().getLng():this.instance.getLng()
     }
 }
-
-let g = new LatLng()
 

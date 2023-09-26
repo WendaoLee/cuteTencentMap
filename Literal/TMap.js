@@ -2,6 +2,10 @@ import { Map } from "./lib/Map";
 import { LatLng } from "./lib/LatLng";
 import { LatLngBounds } from "./lib/LatLngBounds";
 
+Function.prototype.__bind__ = function(ref){
+    ref = this.apply()
+    return
+}
 
 /**
  * 相当于TMap的字面量类。请配合封装好的cuteTencentMap实例在实际代码编写过程中使用。
@@ -17,3 +21,4 @@ export const TMap = {
     LatLng:LatLng,
     LatLngBounds:LatLngBounds
 }
+

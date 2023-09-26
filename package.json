@@ -3,6 +3,7 @@
   "version": "0.2.0-dev",
   "description": "A encapsulation of TencentMap JavascriptAPIv1.0x.It is easy to use with a modern programming style.",
   "main": "cuteTencentMap.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

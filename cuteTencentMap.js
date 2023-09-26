@@ -49,6 +49,8 @@ export class cuteTencentMap{
      */
     #eventLoop(){
 
+        debug(this.#eventQueue.length)
+
         // 若资源未完成加载，那么无须执行接下来的判断逻辑，直接退出继续循环
         if(document.readyState != "complete" && document.getElementById(IMPORT_SCRIPT_ID) == null){
             return
@@ -89,10 +91,27 @@ export class cuteTencentMap{
      * 
      * 腾讯地图实例
      */
-    map
+    map = new TMap.Map()
 
 
 
+    /**
+     * 构造封装好的cuteTencentMap实例。可通过该实例进行对地图的种种操作。
+     * @param {Object} options 配置项，为包括'root''key''library''isinit'等键的对象。
+     * 
+     * root为地图挂载根元素id，必填。
+     * 
+     * key为开发者key，必填。
+     * 
+     * library为一个字符串数组，指定附加库，选填。详见 {@link https://lbs.qq.com/webApi/javascriptGL/glGuide/glBasic}
+     * 
+     * isinit指定是否使用默认配置初始化地图，为布尔值，选填。默认false。
+     * 
+     * @param {string} options.root root为地图挂载根元素id，必填。
+     * @param {string} options.key 开发者key，必填。
+     * @param {Array<string>} options.library 附加库。选填。详见 {@link https://lbs.qq.com/webApi/javascriptGL/glGuide/glBasic}
+     * @param {boolean} options.isinit 是否使用默认配置初始化地图，选填。默认false。
+     */
     constructor({root,key,library=['visualization', 'tools', 'geometry', 'model', 'view', 'service'],isinit = false} = {}){
         (root || key) === undefined?error("地图挂载的根标签与开发者Key必需传入。","此时",{root,key}):debug("cuteTencentMap Class start constructing.",this)
 
@@ -134,8 +153,29 @@ export class cuteTencentMap{
                     center:new TMap.LatLng(30.412919, 111.75407),
                     zoom:11.23
                 })
+
+                that.map = that.map.__evaluate__()
+                
+                debug("Instance's map is:",that.map,typeof that.map,that.map.__literalmapcls__)
             }
+
+            this.#eventQueue.push({
+                evt:defaultMapSet,
+                delay:500
+            })
         }
    
+    }
+
+    /**
+     * 添加一个需要执行的事件
+     * @param {Function} fuc 执行事件逻辑的函数 
+     * @param {Number} delay 延迟时间，单位为毫秒。
+     */
+    addEvent(fuc,hook,delay){
+        this.#eventQueue.push({
+            evt:fuc.bind(hook,delay),
+            delay:delay
+        })
     }
 }
