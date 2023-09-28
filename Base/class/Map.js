@@ -1,5 +1,6 @@
-import {Thunk} from './thunk'
-import { thunkHook } from './hook'
+import {Thunk} from '../abstract/thunk'
+import { thunkHook } from '../abstract/hook'
+import {ThunkProxy,ThunkSymbol,symbolThunkProxy} from '../abstract/AbstractClass'
 
 
 // export function Map(idStr,mapOptions){
@@ -8,13 +9,7 @@ import { thunkHook } from './hook'
 //   return mapIns
 // }
 
-class ThunkProxy{
-  __type__ = "ThunkProxy"
-}
 
-class ThunkSymbol{
-  __type__ = "ThunkSymbol"
-}
 
 class LatLngThunk extends ThunkSymbol{
 
@@ -36,14 +31,27 @@ class LatLngThunk extends ThunkSymbol{
   }
 }
 
-class Map extends ThunkProxy{
+/**
+ * 相当于 TMap.Map。
+ * 使用它生成的实例为 Map 的 ThunkProxy。可借助该 ThunkProxy 书写基于 Map 的种种操作。
+ */
+export class Map extends ThunkProxy{
 
   target
 
-  constructor(idStr,mapOptions){
-    this.target = new Thunk(()=>new window.TMap.Map,idStr,mapOptions)
+  constructor(idStr,mapOptions = null){
+    super()
+    if(mapOptions == null){
+      this.target = new Thunk(()=>window.TMap.Map,idStr,symbolThunkProxy)
+      return
+    }
+    this.target = new Thunk(()=>window.TMap.Map,idStr,mapOptions,symbolThunkProxy)
   }
 
+  /**
+   * 获取代表 Map 的 Thunk。
+   * @returns {Thunk} 
+   */
   thunk(){
     return this.target
   }
@@ -60,11 +68,14 @@ class Map extends ThunkProxy{
     return latLngThunk
   }
 
+  /**
+   * 设置地图中心
+   * @param {LatLngThunk} latLng 经纬度。代表TMap.LatLng的Thunk。
+   * @returns {ThunkProxy} 返回Map的ThunkProxy
+   */
   setCenter(latLng){
     let t = new Thunk(()=>this.target.setCenter,latLng)
+    return this
   }
 }
 
-let a = new Map("dom")
-let center = a.getCenter()
-center.getLat()

@@ -1,4 +1,5 @@
 import { thunkHook } from "./hook";
+import {ThunkProxy,ThunkSymbol,symbolThunkProxy} from './AbstractClass'
 
 /**
  * 对Thunk进行求值
@@ -18,7 +19,7 @@ export function createThunk(){
   return new Thunk()
 }
 
-class Thunk {
+export class Thunk {
   contextArg;
   contextCode;
 
@@ -30,6 +31,10 @@ class Thunk {
   constructor(codeFn, ...args) {
     this.eventQueue = []
     this.closure = () => {
+      let isThunkProxy = (args[args.length - 1] instanceof ThunkProxy)
+      if(isThunkProxy){
+        args.pop()
+      }
       for (const arg of args) {
         if (arg instanceof Thunk) {
           arg = evaluateArgThunk(arg.closure);
@@ -41,6 +46,13 @@ class Thunk {
           }
         }
       }
+
+      if(isThunkProxy){
+        let cons = codeFn()
+        this.contextTarget = new cons(...args);
+        return this.contextTarget
+      }
+
       this.contextTarget = codeFn()(...args);
       return this.contextTarget
     };
