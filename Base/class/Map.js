@@ -1,5 +1,4 @@
 import {Thunk} from '../abstract/thunk'
-import { thunkHook } from '../abstract/hook'
 import {ThunkProxy,ThunkSymbol,symbolThunkProxy} from '../abstract/AbstractClass'
 
 
@@ -38,14 +37,23 @@ class LatLngThunk extends ThunkSymbol{
 export class Map extends ThunkProxy{
 
   target
+  targetRef
 
-  constructor(idStr,mapOptions = null){
+  /**
+   * 创建地图实例。
+   * @param {String} domId (必填)地图DOM容器的id，创建地图需要在页面中创建一个空div元素，传入该div元素的id
+   * @param {*} mapOptions 地图参数，对象规范详见{@link https://lbs.qq.com/webApi/javascriptGL/glDoc/docIndexMap#2 MapOptions}
+   * @returns 
+   */
+  constructor(domId,mapOptions = null){
     super()
     if(mapOptions == null){
-      this.target = new Thunk(()=>window.TMap.Map,idStr,symbolThunkProxy)
+      this.target = new Thunk(()=>window.TMap.Map,domId,symbolThunkProxy)
+      this.targetRef = this.target.contextRef
       return
     }
-    this.target = new Thunk(()=>window.TMap.Map,idStr,mapOptions,symbolThunkProxy)
+    this.target = new Thunk(()=>window.TMap.Map,domId,mapOptions,symbolThunkProxy)
+    this.targetRef = this.target.contextRef
   }
 
   /**
@@ -74,7 +82,11 @@ export class Map extends ThunkProxy{
    * @returns {ThunkProxy} 返回Map的ThunkProxy
    */
   setCenter(latLng){
-    let t = new Thunk(()=>this.target.setCenter,latLng)
+    let setCenter = ()=>{
+      console.log(this)
+      return this.targetRef.ins.setCenter.bind(this.targetRef.ins)
+    }
+    let t = new Thunk(setCenter,latLng)
     return this
   }
 }
