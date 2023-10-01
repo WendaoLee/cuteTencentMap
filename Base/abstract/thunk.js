@@ -1,5 +1,6 @@
 import { thunkHook } from "./hook";
 import {ThunkProxy,ThunkSymbol,symbolThunkProxy} from './AbstractClass'
+import {debug} from './logger.js'
 
 /**
  * 对Thunk进行求值
@@ -21,37 +22,44 @@ export function createThunk(){
 
 export class Thunk {
   contextArg;
-  contextCode;
+  contextFn;
 
   isEvaluated;
   evaluateValue;
 
   contextTarget
   contextMetaIndex
-  contextRef
 
   closure;
 
   constructor(codeFn, ...args) {
     this.isEvaluated = false
+
     this.contextArg = args
-    this.contextCode = codeFn
-    this.eventQueue = []
+    this.contextFn = codeFn
+
+
+    this.contextTarget = {
+      result:undefined
+    }
+
     this.closure = () => {
-      console.debug("closure invokes",this)
+      debug("closure invokes",this)
+
+      //闭包中的函数如果是构造函数，需要使用 new 运算符。因此有这里的特殊处理
+      //通过添加多余的 ThunkProxy 实例标识闭包中的函数为构造函数，而不是普通函数。这样可以正确返回结果值。
       let isThunkProxy = (args[args.length - 1] instanceof ThunkProxy)
       if(isThunkProxy){
-        args.pop()
+        args.pop() //剔除多余参数以避免影响闭包中的函数的执行结果
       }
+
       let i = 0
-      for (let arg of args) {
-        
-        
+      for (let arg of args) {      
         if (arg instanceof Thunk) {
           if(arg.isEvaluated){
-            console.debug('arg is evaluated',arg.evaluateValue)
-            console.debug('arg',arg)
-            args[i] = arg.evaluateValue
+            debug(`Arg is evaluated,for arg in args[${i}]`,arg.evaluateValue)
+            debug('And arg is',arg)
+            args[i] = arg.evaluateValue.val
             console.debug("changed args",args)
             i++
             continue
@@ -60,28 +68,30 @@ export class Thunk {
           i++
           continue
         }
+        //对象中可能有 Thunk
         if(arg instanceof Object){
           for (const key in arg) {
-            arg[key] = arg[key] instanceof Thunk?evaluateArgThunk(arg[key].closure):arg[key]
+            args[i][key] = args[i][key] instanceof Thunk?evaluateArgThunk(args[i][key].closure):args[i][key]
           }
           i++
+          continue
         }
+        i++
       }
 
       if(isThunkProxy){
         let cons = codeFn()
-        this.contextTarget = new cons(...args);
-        console.debug("value return",this.contextTarget)
+        this.contextTarget.result = new cons(...args);
+        debug("contextFn is a constructor,constructor result:",this.contextTarget)
         this.isEvaluated = true
         this.evaluateValue = this.contextTarget
         return this.contextTarget
       }
 
-      console.debug("codeFn:",codeFn,"typeof",typeof codeFn)
-      console.debug("codeFn()",codeFn())
-      console.debug("args",args)
-      this.contextTarget = codeFn()(...args);
-      console.debug("value return",this.contextTarget)
+      debug("codeFn()",codeFn())
+      debug("args",args)
+      this.contextTarget.result = codeFn()(...args);
+      debug("Function value return",this.contextTarget)
       this.isEvaluated = true
       this.evaluateValue = this.contextTarget
       return this.contextTarget
@@ -89,7 +99,7 @@ export class Thunk {
 
     this.contextMetaIndex = thunkHook.nextThunkMetaIndex
     thunkHook.add(this)
-    this.contextRef = thunkHook.getRef(this.contextMetaIndex)
+    // this.contextRef = thunkHook.getRef(this.contextMetaIndex)
     return this
   }
 

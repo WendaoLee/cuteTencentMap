@@ -49,11 +49,11 @@ export class Map extends ThunkProxy{
     super()
     if(mapOptions == null){
       this.target = new Thunk(()=>window.TMap.Map,domId,symbolThunkProxy)
-      this.targetRef = this.target.contextRef
+      this.targetRef = this.target.contextTarget
       return
     }
     this.target = new Thunk(()=>window.TMap.Map,domId,mapOptions,symbolThunkProxy)
-    this.targetRef = this.target.contextRef
+    this.targetRef = this.target.contextTarget
   }
 
   /**
@@ -84,7 +84,7 @@ export class Map extends ThunkProxy{
   setCenter(latLng){
     let setCenter = ()=>{
       console.log(this)
-      return this.targetRef.ins.setCenter.bind(this.targetRef.ins)
+      return this.targetRef.val.setCenter.bind(this.targetRef.val)
     }
     let t = new Thunk(setCenter,latLng)
     return this
