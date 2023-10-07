@@ -1,4 +1,5 @@
 import { createHook } from "./abstract/hook";
+import { Thunk } from "./abstract/thunk";
 
 function importTencentMap(
   key,
@@ -21,4 +22,8 @@ function importTencentMap(
   // createHook()
 }
 
-export { importTencentMap as loadTencentMap };
+function createThunk(codeFn,...args){
+  return new Thunk(codeFn,args)
+}
+
+export { importTencentMap as loadTencentMap,Thunk as Thunk,createThunk as createThunk};

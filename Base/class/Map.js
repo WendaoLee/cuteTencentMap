@@ -28,6 +28,11 @@ class LatLngThunk extends ThunkSymbol{
   getLng(){
 
   }
+
+  /**
+   * 获取该Thunk的结果值
+   */
+  val
 }
 
 /**
@@ -36,7 +41,13 @@ class LatLngThunk extends ThunkSymbol{
  */
 export class Map extends ThunkProxy{
 
+  /**
+   * 该 ThunkProxy 所代理的 Thunk。可通过contextTarget属性获取该Thunk的计算结果。
+   */
   target
+  /**
+   * target.contextTarget 的缩写，指向代表代理的 Thunk 的计算结果，仍然需要.result获取实际属性。
+   */
   targetRef
 
   /**
@@ -65,14 +76,22 @@ export class Map extends ThunkProxy{
   }
 
   /**
+   * 获取代表 Map 的 Thunk。
+   * @returns {Thunk} 
+   */
+  get thunk(){
+    return this.target
+  }
+
+  /**
    * 获取地图中心。
    * 调用该方法获取的是一个未被估值的Thunk。该Thunk可操作，操作同LatLng
    * @returns {LatLngThunk}
    */
   getCenter(){
-    let latLngThunk = new Thunk(()=>this.target.getCenter,)
-    latLngThunk.getLat = ()=> new Thunk(()=>this.target.getCenter().getLat,)
-    latLngThunk.getLng = ()=> new Thunk(()=>this.target.getCenter().getLng,)
+    let latLngThunk = new Thunk(()=>this.targetRef.result.getCenter.bind(this.targetRef.result),)
+    latLngThunk.getLat = ()=> new Thunk(()=>latLngThunk.contextTarget.result.getCenter().getLat,)
+    latLngThunk.getLng = ()=> new Thunk(()=>latLngThunk.contextTarget.result.getCenter().getLng,)
     return latLngThunk
   }
 
@@ -82,9 +101,10 @@ export class Map extends ThunkProxy{
    * @returns {ThunkProxy} 返回Map的ThunkProxy
    */
   setCenter(latLng){
+    console.log("latlng",latLng)
     let setCenter = ()=>{
       console.log(this)
-      return this.targetRef.val.setCenter.bind(this.targetRef.val)
+      return this.targetRef.result.setCenter.bind(this.targetRef.result)
     }
     let t = new Thunk(setCenter,latLng)
     return this
